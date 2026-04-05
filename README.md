@@ -2,7 +2,17 @@
 
 A setup guide and automated installer for the [sddm-astronaut-theme](https://github.com/Keyitdev/sddm-astronaut-theme) on Arch Linux with Hyprland. Includes animated wallpaper support and Nvidia compatibility.
 
-> **Note:** This repo does not contain the theme itself. It provides an install script and guide to set it up correctly. All credit for the theme goes to [Keyitdev](https://github.com/Keyitdev).
+> **Note:** This repo does not contain the theme itself. It only provides an install script, a pre-configured `metadata.desktop`, and this guide. All credit for the actual theme goes to [Keyitdev](https://github.com/Keyitdev). Please ⭐ [his repo](https://github.com/Keyitdev/sddm-astronaut-theme)!
+
+---
+
+## 📁 What's in This Repo
+
+| File | Purpose |
+|---|---|
+| `README.md` | This guide |
+| `install.sh` | Automated installer with backup + rollback |
+| `metadata.desktop` | Pre-configured theme preset file with all 10 presets listed — `astronaut.conf` is active by default. Copy this to `/usr/share/sddm/themes/sddm-astronaut-theme/` to use it. |
 
 ---
 
@@ -27,14 +37,17 @@ chmod +x install.sh
 ```
 
 The script will:
-- ✅ Check your system before doing anything
-- ✅ Ask for confirmation before making changes
-- ✅ Back up all your existing configs
-- ✅ Install dependencies, clone theme, copy fonts, configure SDDM
-- ✅ Auto rollback everything if something goes wrong
-- ✅ Generate a `restore.sh` for manual recovery anytime
+- ✅ Check your system (Arch, internet, sudo, git) before doing anything
+- ✅ Ask for your confirmation before making any changes
+- ✅ Back up all your existing configs to `~/.sddm-astronaut-backup-<timestamp>/`
+- ✅ Install all dependencies
+- ✅ Clone the theme, copy fonts, configure SDDM
+- ✅ Write `metadata.desktop` with all presets ready to switch
+- ✅ Auto rollback everything if something goes wrong mid-install
+- ✅ Generate a `restore.sh` in your backup folder for manual recovery anytime
+- ✅ Optionally preview the theme in test mode before rebooting
 
-After it finishes, jump to [Step 4](#-step-4--pick-your-theme-preset) to choose your theme.
+After it finishes, jump to [Picking Your Theme](#-picking-your-theme) to choose your preset, then reboot.
 
 ---
 
@@ -70,7 +83,7 @@ sudo cp -r /usr/share/sddm/themes/sddm-astronaut-theme/Fonts/* /usr/share/fonts/
 
 ---
 
-### ⚙️ Configure SDDM
+### ⚙️ Step 4 — Configure SDDM
 
 Set the theme:
 
@@ -89,15 +102,45 @@ InputMethod=qtvirtualkeyboard" | sudo tee /etc/sddm.conf.d/virtualkbd.conf
 
 ---
 
-## 🎨 Step 4 — Pick Your Theme Preset
+### 🔁 Step 5 — Enable SDDM
 
-Open the metadata file:
+If you were on **GDM** (GNOME):
+```bash
+sudo systemctl disable gdm
+sudo systemctl enable sddm
+```
+
+If you were on **LightDM**:
+```bash
+sudo systemctl disable lightdm
+sudo systemctl enable sddm
+```
+
+If **SDDM was already your display manager**, just skip this step.
+
+---
+
+## 🎨 Picking Your Theme
+
+### Option A — Use the `metadata.desktop` from this repo
+
+Just copy it directly to the theme folder:
+
+```bash
+sudo cp metadata.desktop /usr/share/sddm/themes/sddm-astronaut-theme/metadata.desktop
+```
+
+It already has all 10 presets listed with `astronaut.conf` active by default. Open it and uncomment whichever you want.
+
+---
+
+### Option B — Edit it manually
 
 ```bash
 sudo nano /usr/share/sddm/themes/sddm-astronaut-theme/metadata.desktop
 ```
 
-Remove `#` from the theme you want, keep `#` on the rest:
+Find the `ConfigFile=` lines and remove `#` from the one you want, keep `#` on the rest:
 
 ```ini
 # Pick ONE by removing its # :
@@ -115,7 +158,7 @@ ConfigFile=Themes/astronaut.conf
 
 Save with `Ctrl+O` → `Enter` → `Ctrl+X`
 
-> You can also just copy the `metadata.desktop` from this repo directly — it already has all presets listed with `astronaut.conf` active by default.
+---
 
 ### 🖼️ Available Presets
 
@@ -134,7 +177,9 @@ Save with `Ctrl+O` → `Enter` → `Ctrl+X`
 
 ---
 
-## 🧪 Step 5 — Test Without Rebooting
+## 🧪 Test Without Rebooting
+
+After picking your preset, always test it first before rebooting:
 
 ```bash
 sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/sddm-astronaut-theme/
@@ -144,22 +189,15 @@ sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/sddm-astronaut-theme
 
 ---
 
-## 🔁 Step 6 — Enable SDDM & Reboot
+## 🔃 Changing Theme Later
 
-If you were on GDM (GNOME) before:
-
-```bash
-sudo systemctl disable gdm
-sudo systemctl enable sddm
-```
-
-Then reboot:
+Already installed and want to switch to a different preset? Just edit the metadata file:
 
 ```bash
-reboot
+sudo nano /usr/share/sddm/themes/sddm-astronaut-theme/metadata.desktop
 ```
 
-🎉 SDDM with your chosen theme will now greet you on login!
+Uncomment the preset you want, comment the rest, save, test, then reboot. No reinstallation needed.
 
 ---
 
@@ -197,9 +235,9 @@ GreeterEnvironment=QT_XCB_NO_MITSHM=1
 
 ## 😱 Something Went Wrong?
 
-**If the script crashed mid-way** — it auto-rolls back. Your system is restored automatically.
+**If the script crashed mid-way** — it auto-rolls back automatically. Your system is restored to how it was before.
 
-**If you want to restore manually after reboot:**
+**If you want to restore manually after rebooting:**
 
 ```bash
 bash ~/.sddm-astronaut-backup-*/restore.sh
@@ -207,17 +245,6 @@ reboot
 ```
 
 This restores all your original configs and re-enables your previous display manager.
-
----
-
-## 📁 Repo Structure
-
-```
-sddm-astronaut-setup/
-├── README.md           # This guide
-├── install.sh          # Automated install script with backup + rollback
-└── metadata.desktop    # Pre-configured preset file (astronaut active by default)
-```
 
 ---
 

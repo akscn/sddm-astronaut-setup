@@ -1,1 +1,27 @@
+[SddmGreeterTheme]
+Name=sddm-astronaut-theme
+Description=sddm-astronaut-theme
+Author=keyitdev
+Website=https://github.com/Keyitdev/sddm-astronaut-theme
+License=GPL-3.0-or-later
+Type=sddm-theme
+Version=1.3
 
+# Pick ONE by removing its # :
+ConfigFile=Themes/astronaut.conf
+#ConfigFile=Themes/black_hole.conf
+#ConfigFile=Themes/japanese_aesthetic.conf
+#ConfigFile=Themes/cyberpunk.conf
+#ConfigFile=Themes/purple_leaves.conf
+#ConfigFile=Themes/post-apocalyptic_hacker.conf
+#ConfigFile=Themes/pixel_sakura_static.conf
+#ConfigFile=Themes/pixel_sakura.conf
+#ConfigFile=Themes/hyprland_kath.conf
+#ConfigFile=Themes/jake_the_dog.conf
+
+Screenshot=Previews/astronaut.png
+MainScript=Main.qml
+TranslationsDirectory=translations
+Theme-Id=sddm-astronaut-theme
+Theme-API=2.0
+QtVersion=6

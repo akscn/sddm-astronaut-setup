@@ -1,6 +1,8 @@
 # 🚀 SDDM Astronaut Theme Setup — Arch Linux + Hyprland
 
-A step-by-step guide to installing and configuring the [sddm-astronaut-theme](https://github.com/Keyitdev/sddm-astronaut-theme) on Arch Linux with Hyprland. Includes animated wallpaper support for Nvidia GPUs.
+A setup guide and automated installer for the [sddm-astronaut-theme](https://github.com/Keyitdev/sddm-astronaut-theme) on Arch Linux with Hyprland. Includes animated wallpaper support and Nvidia compatibility.
+
+> **Note:** This repo does not contain the theme itself. It provides an install script and guide to set it up correctly. All credit for the theme goes to [Keyitdev](https://github.com/Keyitdev).
 
 ---
 
@@ -8,14 +10,14 @@ A step-by-step guide to installing and configuring the [sddm-astronaut-theme](ht
 
 - Arch Linux
 - Hyprland (or any Wayland compositor)
-- SDDM already installed
-- Nvidia GPU (GTX 1650 or similar)
+- Internet connection
+- A terminal
 
 ---
 
-## ⚡ Quick Install (Automated)
+## ⚡ Quick Install (Recommended)
 
-If you don't want to do the steps manually, just clone this repo and run the install script — it does everything for you automatically.
+Clone this repo and run the install script — it handles everything automatically:
 
 ```bash
 git clone https://github.com/akscn/sddm-astronaut-setup.git
@@ -24,16 +26,21 @@ chmod +x install.sh
 ./install.sh
 ```
 
-After it finishes:
-1. Edit `metadata.desktop` to pick your preferred theme preset (see [Step 5](#-step-5--choose-a-theme-preset))
-2. Test it: `sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/sddm-astronaut-theme/`
-3. Reboot: `reboot`
+The script will:
+- ✅ Check your system before doing anything
+- ✅ Ask for confirmation before making changes
+- ✅ Back up all your existing configs
+- ✅ Install dependencies, clone theme, copy fonts, configure SDDM
+- ✅ Auto rollback everything if something goes wrong
+- ✅ Generate a `restore.sh` for manual recovery anytime
 
-> If you prefer to do it manually, follow the steps below.
+After it finishes, jump to [Step 4](#-step-4--pick-your-theme-preset) to choose your theme.
 
 ---
 
 ## 🛠️ Manual Installation
+
+If you prefer doing it yourself step by step:
 
 ### 📦 Step 1 — Install Dependencies
 
@@ -63,16 +70,16 @@ sudo cp -r /usr/share/sddm/themes/sddm-astronaut-theme/Fonts/* /usr/share/fonts/
 
 ---
 
-### ⚙️ Step 4 — Configure SDDM
+### ⚙️ Configure SDDM
 
-Set the theme in `/etc/sddm.conf`:
+Set the theme:
 
 ```bash
 echo "[Theme]
 Current=sddm-astronaut-theme" | sudo tee /etc/sddm.conf
 ```
 
-Enable the virtual keyboard:
+Enable virtual keyboard:
 
 ```bash
 sudo mkdir -p /etc/sddm.conf.d
@@ -82,15 +89,15 @@ InputMethod=qtvirtualkeyboard" | sudo tee /etc/sddm.conf.d/virtualkbd.conf
 
 ---
 
-### 🎨 Step 5 — Choose a Theme Preset
+## 🎨 Step 4 — Pick Your Theme Preset
 
-Edit the metadata file:
+Open the metadata file:
 
 ```bash
 sudo nano /usr/share/sddm/themes/sddm-astronaut-theme/metadata.desktop
 ```
 
-Replace the `ConfigFile=` section with the following block. Remove `#` from the theme you want and keep `#` on the rest:
+Remove `#` from the theme you want, keep `#` on the rest:
 
 ```ini
 # Pick ONE by removing its # :
@@ -106,38 +113,40 @@ ConfigFile=Themes/astronaut.conf
 #ConfigFile=Themes/jake_the_dog.conf
 ```
 
-> You can also just copy the `metadata.desktop` file from this repo directly into `/usr/share/sddm/themes/sddm-astronaut-theme/` — it already has all presets listed.
+Save with `Ctrl+O` → `Enter` → `Ctrl+X`
+
+> You can also just copy the `metadata.desktop` from this repo directly — it already has all presets listed with `astronaut.conf` active by default.
 
 ### 🖼️ Available Presets
 
 | Theme | Style |
 |---|---|
-| `astronaut.conf` | Default space astronaut (static) |
-| `black_hole.conf` | Dark black hole (static) |
-| `japanese_aesthetic.conf` | Japanese lofi vibes (static) |
-| `cyberpunk.conf` | Neon cyberpunk (static) |
-| `purple_leaves.conf` | Purple nature (static) |
-| `post-apocalyptic_hacker.conf` | Hacker dark (static) |
-| `pixel_sakura_static.conf` | Sakura — static version |
+| `astronaut.conf` | 🪐 Default space astronaut (static) |
+| `black_hole.conf` | 🌑 Dark black hole (static) |
+| `japanese_aesthetic.conf` | 🎌 Japanese lofi vibes (static) |
+| `cyberpunk.conf` | 🌆 Neon cyberpunk (static) |
+| `purple_leaves.conf` | 🍃 Purple nature (static) |
+| `post-apocalyptic_hacker.conf` | 💀 Hacker dark (static) |
+| `pixel_sakura_static.conf` | 🌸 Sakura static |
 | `pixel_sakura.conf` | 🌸 Animated pixel sakura |
 | `hyprland_kath.conf` | 🎌 Animated anime girl |
 | `jake_the_dog.conf` | 🐶 Animated Jake the Dog |
 
 ---
 
-### 🧪 Step 6 — Test Without Rebooting
+## 🧪 Step 5 — Test Without Rebooting
 
 ```bash
 sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/sddm-astronaut-theme/
 ```
 
-> Login won't work in test mode — that's expected. It's just a visual preview.
+> Login won't work in test mode — that's completely normal. It's just a visual preview. Close with `Super+Q` or `Alt+F4`.
 
 ---
 
-### 🔁 Step 7 — Enable SDDM & Reboot
+## 🔁 Step 6 — Enable SDDM & Reboot
 
-If you were previously using GDM (GNOME's display manager):
+If you were on GDM (GNOME) before:
 
 ```bash
 sudo systemctl disable gdm
@@ -150,23 +159,7 @@ Then reboot:
 reboot
 ```
 
----
-
-## ⚠️ Nvidia Troubleshooting
-
-If you see a black screen or no animation in test mode, try:
-
-```bash
-QT_XCB_NO_MITSHM=1 sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/sddm-astronaut-theme/
-```
-
-If that fixes it, add the env variable permanently to `/etc/sddm.conf.d/virtualkbd.conf`:
-
-```ini
-[General]
-InputMethod=qtvirtualkeyboard
-GreeterEnvironment=QT_XCB_NO_MITSHM=1
-```
+🎉 SDDM with your chosen theme will now greet you on login!
 
 ---
 
@@ -180,24 +173,62 @@ You should see `sddm.service` as `active (running)`.
 
 ---
 
+## ⚠️ Nvidia Troubleshooting
+
+If you see a black screen or no animation in test mode, try:
+
+```bash
+QT_XCB_NO_MITSHM=1 sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/sddm-astronaut-theme/
+```
+
+If that fixes it, add the env variable permanently:
+
+```bash
+sudo nano /etc/sddm.conf.d/virtualkbd.conf
+```
+
+```ini
+[General]
+InputMethod=qtvirtualkeyboard
+GreeterEnvironment=QT_XCB_NO_MITSHM=1
+```
+
+---
+
+## 😱 Something Went Wrong?
+
+**If the script crashed mid-way** — it auto-rolls back. Your system is restored automatically.
+
+**If you want to restore manually after reboot:**
+
+```bash
+bash ~/.sddm-astronaut-backup-*/restore.sh
+reboot
+```
+
+This restores all your original configs and re-enables your previous display manager.
+
+---
+
 ## 📁 Repo Structure
 
 ```
 sddm-astronaut-setup/
 ├── README.md           # This guide
-├── install.sh          # Automated install script
-└── metadata.desktop    # Pre-configured theme preset file
+├── install.sh          # Automated install script with backup + rollback
+└── metadata.desktop    # Pre-configured preset file (astronaut active by default)
 ```
 
 ---
 
 ## 🔗 Credits
 
-- Theme by [Keyitdev](https://github.com/Keyitdev/sddm-astronaut-theme)
-- Guide written for Arch Linux + Hyprland + Nvidia
+- 🎨 **Original theme:** [sddm-astronaut-theme](https://github.com/Keyitdev/sddm-astronaut-theme) by [Keyitdev](https://github.com/Keyitdev) — all theme assets, QML code, wallpapers and presets belong to him. Please ⭐ his repo!
+- 📝 **This install guide & script:** [akscn](https://github.com/akscn) — written for Arch Linux + Hyprland + Nvidia
 
 ---
 
 ## 📄 License
 
-This guide is free to use and share. The theme itself is licensed under [GPLv3+](https://www.gnu.org/licenses/gpl-3.0.html).
+This install guide and script are free to use and share.
+The theme itself is licensed under [GPLv3+](https://www.gnu.org/licenses/gpl-3.0.html) by Keyitdev.

@@ -13,7 +13,29 @@ A step-by-step guide to installing and configuring the [sddm-astronaut-theme](ht
 
 ---
 
-## 📦 Step 1 — Install Dependencies
+## ⚡ Quick Install (Automated)
+
+If you don't want to do the steps manually, just clone this repo and run the install script — it does everything for you automatically.
+
+```bash
+git clone https://github.com/akscn/sddm-astronaut-setup.git
+cd sddm-astronaut-setup
+chmod +x install.sh
+./install.sh
+```
+
+After it finishes:
+1. Edit `metadata.desktop` to pick your preferred theme preset (see [Step 5](#-step-5--choose-a-theme-preset))
+2. Test it: `sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/sddm-astronaut-theme/`
+3. Reboot: `reboot`
+
+> If you prefer to do it manually, follow the steps below.
+
+---
+
+## 🛠️ Manual Installation
+
+### 📦 Step 1 — Install Dependencies
 
 ```bash
 sudo pacman -S --needed sddm qt6-svg qt6-virtualkeyboard qt6-multimedia-ffmpeg
@@ -23,7 +45,7 @@ sudo pacman -S --needed sddm qt6-svg qt6-virtualkeyboard qt6-multimedia-ffmpeg
 
 ---
 
-## 📥 Step 2 — Clone the Theme
+### 📥 Step 2 — Clone the Theme
 
 ```bash
 sudo git clone -b master --depth 1 \
@@ -33,7 +55,7 @@ sudo git clone -b master --depth 1 \
 
 ---
 
-## 🔤 Step 3 — Copy Fonts
+### 🔤 Step 3 — Copy Fonts
 
 ```bash
 sudo cp -r /usr/share/sddm/themes/sddm-astronaut-theme/Fonts/* /usr/share/fonts/
@@ -41,7 +63,7 @@ sudo cp -r /usr/share/sddm/themes/sddm-astronaut-theme/Fonts/* /usr/share/fonts/
 
 ---
 
-## ⚙️ Step 4 — Configure SDDM
+### ⚙️ Step 4 — Configure SDDM
 
 Set the theme in `/etc/sddm.conf`:
 
@@ -60,7 +82,7 @@ InputMethod=qtvirtualkeyboard" | sudo tee /etc/sddm.conf.d/virtualkbd.conf
 
 ---
 
-## 🎨 Step 5 — Choose a Theme Preset
+### 🎨 Step 5 — Choose a Theme Preset
 
 Edit the metadata file:
 
@@ -84,6 +106,8 @@ ConfigFile=Themes/astronaut.conf
 #ConfigFile=Themes/jake_the_dog.conf
 ```
 
+> You can also just copy the `metadata.desktop` file from this repo directly into `/usr/share/sddm/themes/sddm-astronaut-theme/` — it already has all presets listed.
+
 ### 🖼️ Available Presets
 
 | Theme | Style |
@@ -101,7 +125,7 @@ ConfigFile=Themes/astronaut.conf
 
 ---
 
-## 🧪 Step 6 — Test Without Rebooting
+### 🧪 Step 6 — Test Without Rebooting
 
 ```bash
 sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/sddm-astronaut-theme/
@@ -111,7 +135,7 @@ sddm-greeter-qt6 --test-mode --theme /usr/share/sddm/themes/sddm-astronaut-theme
 
 ---
 
-## 🔁 Step 7 — Enable SDDM & Reboot
+### 🔁 Step 7 — Enable SDDM & Reboot
 
 If you were previously using GDM (GNOME's display manager):
 
@@ -153,6 +177,17 @@ systemctl status display-manager
 ```
 
 You should see `sddm.service` as `active (running)`.
+
+---
+
+## 📁 Repo Structure
+
+```
+sddm-astronaut-setup/
+├── README.md           # This guide
+├── install.sh          # Automated install script
+└── metadata.desktop    # Pre-configured theme preset file
+```
 
 ---
 
